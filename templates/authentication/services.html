@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <title>True Collabs - Services</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+      background-size: cover;
+      color: #343a40;
+    }
+    .navbar {
+      margin-bottom: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    .navbar-brand, .nav-link {
+      color: #343a40 !important;
+    }
+    .content {
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .service-item {
+      margin-bottom: 20px;
+    }
+    .btn-custom {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" href="#">True Collabs</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/services">Services</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/campaign/contact-us">For Brands</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <p style="color: red;">Hi {{ user.first_name }}!</p>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/logout">Log Out</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="/signup">Sign Up</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/login">Login</a>
+        </li>
+        {% endif %}
+    </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="content">
+      <h3>Our Services</h3>
+      <p>At True Collabs, we offer a range of services to help you excel in influencer marketing.</p>
+      <div class="service-item">
+        <h4>Influencer Campaign Management</h4>
+        <p>We manage end-to-end influencer campaigns to ensure maximum engagement and ROI for your brand.</p>
+      </div>
+      <div class="service-item">
+        <h4>Content Creation and Strategy</h4>
+        <p>Our team of experts helps create compelling content and strategic plans tailored to your brand’s needs.</p>
+      </div>
+      <div class="service-item">
+        <h4>Brand Collaborations</h4>
+        <p>We connect you with the right influencers to create impactful brand collaborations that resonate with your audience.</p>
+      </div>
+      <div class="service-item">
+        <h4>Analytics and Reporting</h4>
+        <p>Get detailed insights and reports on your campaigns’ performance to make informed decisions for future strategies.</p>
+      </div>
+      <a href="/contact" class="btn btn-primary btn-custom">Contact Us for More Info</a>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

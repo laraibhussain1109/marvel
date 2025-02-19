@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <title>True Collabs - About Us</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+      background-size: cover;
+      color: #343a40;
+    }
+    .navbar {
+      margin-bottom: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    .navbar-brand, .nav-link {
+      color: #343a40 !important;
+    }
+    .content {
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .about-item {
+      margin-bottom: 20px;
+    }
+    .btn-custom {
+      margin-top: 20px;
+    }
+    .owner-section {
+      display: flex;
+      align-items: center;
+      margin-top: 30px;
+    }
+    .owner-photo {
+      border-radius: 50%;
+      margin-right: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" href="#">True Collabs</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/services">Services</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/campaign/contact-us">For Brands</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <p style="color: red;">Hi {{ user.first_name }}!</p>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/logout">Log Out</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="/signup">Sign Up</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/login">Login</a>
+        </li>
+        {% endif %}
+    </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="content">
+      <h3>About Us</h3>
+      <p>Welcome to True Collabs, your trusted partner in influencer marketing. Founded by Haseeb Ur Rehman, we are dedicated to connecting brands with the right influencers to create impactful campaigns.</p>
+      <div class="about-item">
+        <h4>Our Mission</h4>
+        <p>Our mission is to bridge the gap between brands and influencers, fostering authentic collaborations that resonate with audiences and drive engagement.</p>
+      </div>
+      <div class="about-item">
+        <h4>Our Vision</h4>
+        <p>We envision a world where influencer marketing is transparent, effective, and mutually beneficial for both brands and influencers.</p>
+      </div>
+      <div class="about-item">
+        <h4>Our Values</h4>
+        <p>At True Collabs, we value authenticity, creativity, and results. We strive to create campaigns that are not only successful but also meaningful and genuine.</p>
+      </div>
+      <div class="owner-section">
+        <img src="https://www.example.com/haseeb-photo.jpg" alt="Haseeb Ur Rehman" class="owner-photo" width="150">
+        <div>
+          <h4>About the Founder: Haseeb Ur Rehman</h4>
+          <p>Haseeb Ur Rehman is the visionary behind True Collabs. With a passion for marketing and a deep understanding of the influencer industry, Haseeb has built a platform that seamlessly connects brands and influencers. His dedication to authenticity and creative excellence drives the success of every campaign at True Collabs.</p>
+        </div>
+      </div>
+      <a href="/contact" class="btn btn-primary btn-custom">Contact Us</a>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
