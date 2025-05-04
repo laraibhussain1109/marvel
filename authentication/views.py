@@ -105,20 +105,67 @@ def activate(request,uidb64,token):
         return render(request,'authentication/activation_failed.html')    
 
 
+# authentication/views.py
+from django.utils import timezone
+from datetime import timedelta
+from .utils import send_otp_email
+
 def login(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        pass1 = request.POST['pass1']
-        user = authenticate(username=username, password=pass1)
-        if user is not None:
-            auth_login(request, user)
-            fname= user.first_name
-            return render(request,"authentication/index.html", {'fname': fname})
-        else:
-            messages.error(request,"Bad Credentials")
-            return redirect('index')
-        
+        identifier = request.POST.get('identifier')
+        password   = request.POST.get('pass1')
+
+        # find User by email or username
+        try:
+            user_obj = User.objects.get(email=identifier)
+            username = user_obj.username
+        except User.DoesNotExist:
+            username = identifier
+
+        user = authenticate(request, username=username, password=password)
+        if user:
+            # generate + email OTP, save to session
+            send_otp_email(request, user)
+            return redirect('verify_otp')
+        messages.error(request, "Invalid credentials")
+        return redirect('login')
+
     return render(request, "authentication/login.html")
+
+
+# authentication/views.py
+from django.contrib.auth import login as auth_login
+
+def verify_otp(request):
+    if request.method == 'POST':
+        entered = request.POST.get('otp_code')
+        sess    = request.session
+
+        # basic expiration + match check
+        if 'otp_code' not in sess:
+            messages.error(request, "Session expired; please log in again.")
+            return redirect('login')
+
+        expires = timezone.fromtimestamp(sess['otp_expires'])
+        if timezone.now() > expires:
+            messages.error(request, "OTP expired; please log in again.")
+            return redirect('login')
+
+        if entered == sess.get('otp_code'):
+            # all good → log them in
+            user = User.objects.get(pk=sess['otp_user_pk'])
+            auth_login(request, user)
+
+            # clean up session
+            for k in ('otp_user_pk','otp_code','otp_expires'):
+                sess.pop(k, None)
+
+            return redirect('home')
+        else:
+            messages.error(request, "Wrong code.")
+            return redirect('verify_otp')
+
+    return render(request, "authentication/verify_otp.html")
 
 def logout(request):
     auth_logout(request)
