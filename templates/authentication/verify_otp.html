@@ -1,0 +1,8 @@
+<form method="post">
+{% csrf_token %}
+<p> We have sent you a 6 digit login OTP.</p>
+<p> Also Check your junk/spam folder if you did not find it </p>
+<label>Enter your OTP </label>
+<input type="text" name="otp_code" pattern="\d{6}" required>
+<button type="submit"> Verify & Log In</button>
+</form>

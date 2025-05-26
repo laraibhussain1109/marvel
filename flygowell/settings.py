@@ -18,9 +18,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # from .info import EMAIL_USE_TLS, EMAIL_HOST, EMAIL_HOST_PASSWORD, EMAIL_PORT, EMAIL_HOST_USER
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
-EMAIL_HOST =  'smtpout.secureserver.net'
-EMAIL_HOST_USER = 'support@flygowell.in'
-EMAIL_HOST_PASSWORD = '8573956755'
+EMAIL_HOST =  'smtp.hostinger.com'
+EMAIL_HOST_USER = 'support@marvelcollabs.com'
+EMAIL_HOST_PASSWORD = '125kipsS@'
 EMAIL_PORT = 587
 
 
@@ -33,7 +33,7 @@ DEBUG = True
 
 # Define the allowed hosts for the project
 ALLOWED_HOSTS = ['*']
-
+CSRF_TRUSTED_ORIGINS = ["https://marvelcollabs.com", "https://www.marvelcollabs.com", ]
 # Application definition
 INSTALLED_APPS = [
     # Django default apps
@@ -124,10 +124,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 STATIC_URL = '/static/'
 # Use a single directory for all static files
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+#STATIC_URL = BASE_DIR / 'static'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "staticfiles")]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
