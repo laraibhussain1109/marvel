@@ -61,7 +61,7 @@ def signup(request):
         messages.success(request, "Your account has been successfully created. Please check your mail to confirm your email address.")
          # Welcome Email
         subject = "Welcome to Marvel Collabs Login!!"
-        message = "Hello " + myuser.first_name + "!! \n" + "Welcome to Marvel Collabs!! \nThank you for visiting our website\n. We have also sent you a confirmation email, please confirm your email address. \n\nThanking You\nHaseeb Ur Rehman (CEO)"        
+        message = "Hello " + myuser.first_name + "!! \n" + "Welcome to Marvel Collabs!! \nThank you for visiting our website\n. We have also sent you a confirmation email, please confirm your email address. \n\nThanking You\n Team MarvelCollabs"        
         from_email = settings.EMAIL_HOST_USER
         to_list = [myuser.email]
         send_mail(subject, message, from_email, to_list, fail_silently=True)

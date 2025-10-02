@@ -46,6 +46,24 @@
         {% endfor %}
     
         <div class="welcome">
+<div class="container">
+     <div class="card p-3">
+{% load socialaccount %}
+
+{% if not has_facebook %}
+  <a href="{% provider_login_url "facebook" process="connect" %}">
+    Connect Facebook
+  </a>
+{% endif %}
+
+{% if not has_instagram %}
+  <a href="{% provider_login_url "instagram" process="connect" %}">
+    Connect Instagram
+  </a>
+{% endif %}
+</div>
+        </div>
+
 
     <div class="container">
         <h1 class="text-center mb-4">Available Campaigns</h1>

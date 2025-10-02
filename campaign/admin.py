@@ -111,6 +111,6 @@ class DeliverableAdmin(admin.ModelAdmin):
 
 @admin.register(CampaignInquiry)
 class CampaignInquiryAdmin(admin.ModelAdmin):
-    list_display = ('brand_name', 'brand_email', 'campaign_genre', 'budget', 'submitted_at')
-    list_filter = ('campaign_genre', 'region', 'submitted_at')
-    search_fields = ('brand_name', 'brand_email', 'campaign_genre')
+    list_display = ('brand_name', 'brand_email', 'creator_genre', 'submitted_at')
+    list_filter = ('creator_genre', 'region', 'submitted_at')
+    search_fields = ('brand_name', 'brand_email', 'creator_genre')

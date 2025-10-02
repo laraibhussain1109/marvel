@@ -2,13 +2,23 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Campaign, Deliverable
 from django.contrib import messages
+from authentication.decorators import social_required
 
 @login_required
 def list_campaigns(request):
     campaigns = Campaign.objects.all()
-    return render(request, "campaigns/list_campaigns.html", {"campaigns": campaigns})
+    user      = request.user
+
+    # pre-calc what you need
+    has_fb = user.socialaccount_set.filter(provider='facebook').exists()
+    has_ig = user.socialaccount_set.filter(provider='instagram').exists()
+    return render(request, "campaigns/list_campaigns.html", {"campaigns": campaigns,
+                                                             "has_fb": has_fb,
+                                                             "has_ig": has_ig,})
+
 
 @login_required
+@social_required
 def participate_in_campaign(request, campaign_id):
     campaign = get_object_or_404(Campaign, id=campaign_id)
     if Deliverable.objects.filter(campaign=campaign, influencer=request.user).exists():
@@ -20,6 +30,7 @@ def participate_in_campaign(request, campaign_id):
     return redirect('list_campaigns')
 
 @login_required
+@social_required
 def upload_deliverable(request, campaign_id):
     campaign = get_object_or_404(Campaign, id=campaign_id)
     deliverable = Deliverable.objects.filter(campaign=campaign, influencer=request.user).first()

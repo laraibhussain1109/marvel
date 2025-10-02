@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('authentication.urls')),  # Routes for authentication views
     path('campaign/', include('campaign.urls')),  # Routes for campaign views
+    path('accounts/', include('allauth.urls')),
 ]

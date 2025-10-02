@@ -20,7 +20,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST =  'smtp.hostinger.com'
 EMAIL_HOST_USER = 'support@marvelcollabs.com'
-EMAIL_HOST_PASSWORD = '125kipsS@'
+EMAIL_HOST_PASSWORD = 'Marvelous@1999'
 EMAIL_PORT = 587
 
 
@@ -44,9 +44,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'campaign',
+    'allauth', 'allauth.account', 'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.instagram',
+
 
     # Add your custom apps here
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     # Django default middleware
@@ -57,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+     'allauth.account.middleware.AccountMiddleware',
 ]
 
 # Define the root URL configuration
