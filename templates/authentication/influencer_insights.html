@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Influencer Insights</title>
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-4">
+  <h2 class="mb-4">Influencer Analytics Sharing</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="card mb-4">
+    <div class="card-header">Connect Meta / Instagram / Google</div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-primary" type="submit">Save Connection</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">Connected Accounts</div>
+    <div class="card-body">
+      {% if connections %}
+      <ul class="list-group">
+        {% for connection in connections %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ connection.get_platform_display }}</strong> — {{ connection.external_account_id }}
+          </div>
+          <a class="btn btn-sm btn-success" href="{% url 'sync_influencer_metrics' connection.id %}">Sync Metrics</a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No accounts connected yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Latest Shared Metrics</div>
+    <div class="card-body table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Source</th><th>Followers</th><th>Profile Views</th><th>Reach</th><th>Impressions</th><th>Page Views</th><th>Engagement</th><th>Engagement Rate</th><th>Location</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for metric in latest_snapshots %}
+          <tr>
+            <td>{{ metric.get_source_display }}</td>
+            <td>{{ metric.followers }}</td>
+            <td>{{ metric.profile_views }}</td>
+            <td>{{ metric.reach }}</td>
+            <td>{{ metric.impressions }}</td>
+            <td>{{ metric.page_views }}</td>
+            <td>{{ metric.engagement }}</td>
+            <td>{{ metric.engagement_rate }}%</td>
+            <td>{{ metric.location }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="9">No shared metrics yet.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>
