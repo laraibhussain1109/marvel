@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -12,9 +13,24 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str as force_text
 from . tokens import generate_token
+from .forms import InfluencerPlatformConnectionForm
+from .models import InfluencerMetricSnapshot, InfluencerPlatformConnection
+from .services import (
+    ApiIntegrationError,
+    fetch_facebook_insights,
+    fetch_google_analytics,
+    fetch_instagram_insights,
+    fetch_youtube_insights,
+)
 # Create your views here.
 def index(request):
-    return render(request, "authentication/index.html")
+    influencers = [
+        {"name": "Aarav Menon", "image": "assets/img/team/team-1.jpg"},
+        {"name": "Nisha Kapoor", "image": "assets/img/team/team-2.jpg"},
+        {"name": "Reyansh Patel", "image": "assets/img/team/team-3.jpg"},
+        {"name": "Sara Ali", "image": "assets/img/team/team-4.jpg"},
+    ]
+    return render(request, "authentication/index.html", {"influencers": influencers})
 def home(request):
     return render(request, "authentication/home.html")
 def about(request):
@@ -185,6 +201,87 @@ def activate(request, uidb64, token):
         return redirect('index')
     else:
         return render(request, 'activation_failed.html')
+
+
+@login_required
+def influencer_insights(request):
+    if request.method == "POST":
+        form = InfluencerPlatformConnectionForm(request.POST)
+        if form.is_valid():
+            connection = form.save(commit=False)
+            connection.influencer = request.user
+            connection.save()
+            messages.success(request, "Account connected successfully. Sync to fetch live metrics.")
+            return redirect("influencer_insights")
+    else:
+        form = InfluencerPlatformConnectionForm()
+
+    connections = request.user.platform_connections.order_by("-updated_at")
+    latest_by_connection = []
+    for connection in connections:
+        snapshot = connection.snapshots.first()
+        latest_by_connection.append({"connection": connection, "snapshot": snapshot})
+
+    return render(
+        request,
+        "authentication/influencer_insights.html",
+        {
+            "form": form,
+            "connections_with_latest": latest_by_connection,
+        },
+    )
+
+
+@login_required
+def sync_influencer_metrics(request, connection_id):
+    connection = InfluencerPlatformConnection.objects.filter(
+        id=connection_id,
+        influencer=request.user,
+    ).first()
+    if not connection:
+        messages.error(request, "Connection not found.")
+        return redirect("influencer_insights")
+
+    try:
+        if connection.platform == InfluencerPlatformConnection.PLATFORM_FACEBOOK:
+            payload = fetch_facebook_insights(connection)
+        elif connection.platform == InfluencerPlatformConnection.PLATFORM_INSTAGRAM:
+            payload = fetch_instagram_insights(connection)
+        elif connection.platform == InfluencerPlatformConnection.PLATFORM_YOUTUBE:
+            payload = fetch_youtube_insights(connection)
+        else:
+            payload = fetch_google_analytics(connection)
+
+        followers = payload.get("followers", 0)
+        connection.latest_followers = followers
+        connection.creator_tier = InfluencerPlatformConnection.resolve_creator_tier(followers)
+        connection.save(update_fields=["latest_followers", "creator_tier", "updated_at"])
+
+        snapshot = InfluencerMetricSnapshot.objects.create(
+            influencer=request.user,
+            connection=connection,
+            source=connection.platform,
+            followers=followers,
+            profile_views=payload.get("profile_views", 0),
+            reach=payload.get("reach", 0),
+            impressions=payload.get("impressions", 0),
+            page_views=payload.get("page_views", 0),
+            engagement=payload.get("engagement", 0),
+            engagement_rate=payload.get("engagement_rate", 0),
+            location=payload.get("location", ""),
+            gender_split=payload.get("gender_split", {}),
+            city_split=payload.get("city_split", {}),
+            raw_payload=payload.get("raw_payload", {}),
+        )
+        messages.success(
+            request,
+            f"Metrics synced from {snapshot.get_source_display()}. Tier: {connection.get_creator_tier_display()}.",
+        )
+    except ApiIntegrationError as exc:
+        messages.error(request, f"API sync failed: {exc}")
+
+    return redirect("influencer_insights")
+
 
 
 # from django.shortcuts import render, get_object_or_404, redirect

@@ -44,9 +44,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'campaign',
+    'authentication',
 
     # Add your custom apps here
 ]
+
+META_GRAPH_API_VERSION = os.getenv('META_GRAPH_API_VERSION', 'v20.0')
 
 MIDDLEWARE = [
     # Django default middleware
