@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'campaign',
-    'authentication',
+    'campaign.apps.CampaignConfig',
+    'authentication.apps.AuthenticationConfig',
 
     # Add your custom apps here
 ]
