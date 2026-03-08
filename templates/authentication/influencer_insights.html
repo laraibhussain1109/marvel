@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Influencer Account Assessment</title>
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-4">
+  <h2 class="mb-3">Connect Social Accounts</h2>
+  <p class="text-muted">After login, connect Facebook, Instagram, YouTube, and Google Analytics accounts to assess and categorize creators.</p>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="card mb-4">
+    <div class="card-header">Add Account Connection</div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-primary" type="submit">Connect Account</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Connected Accounts and Latest Assessment</div>
+    <div class="card-body">
+      {% if connections_with_latest %}
+      <div class="table-responsive">
+        <table class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <th>Platform</th>
+              <th>Account</th>
+              <th>Followers/Subscribers</th>
+              <th>Category</th>
+              <th>Reach</th>
+              <th>Impressions</th>
+              <th>Engagement</th>
+              <th>Eng. Rate</th>
+              <th>Location</th>
+              <th>Gender Split</th>
+              <th>City Split</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for row in connections_with_latest %}
+            <tr>
+              <td>{{ row.connection.get_platform_display }}</td>
+              <td>{{ row.connection.profile_handle|default:row.connection.external_account_id }}</td>
+              <td>{% if row.snapshot %}{{ row.snapshot.followers }}{% else %}-{% endif %}</td>
+              <td>{{ row.connection.get_creator_tier_display|default:"Not assessed" }}</td>
+              <td>{% if row.snapshot %}{{ row.snapshot.reach }}{% else %}-{% endif %}</td>
+              <td>{% if row.snapshot %}{{ row.snapshot.impressions }}{% else %}-{% endif %}</td>
+              <td>{% if row.snapshot %}{{ row.snapshot.engagement }}{% else %}-{% endif %}</td>
+              <td>{% if row.snapshot %}{{ row.snapshot.engagement_rate }}%{% else %}-{% endif %}</td>
+              <td>{% if row.snapshot %}{{ row.snapshot.location }}{% else %}-{% endif %}</td>
+              <td><small>{% if row.snapshot %}{{ row.snapshot.gender_split }}{% else %}-{% endif %}</small></td>
+              <td><small>{% if row.snapshot %}{{ row.snapshot.city_split }}{% else %}-{% endif %}</small></td>
+              <td><a class="btn btn-sm btn-success" href="{% url 'sync_influencer_metrics' row.connection.id %}">Sync</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="alert alert-secondary mt-3 mb-0">
+        Tiers: Nano (1K-10K), Micro (10K-100K), Mid-tier (100K-500K), Macro (500K-1M), Mega (1M+).
+      </div>
+      {% else %}
+      <p>No connected accounts yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+</body>
+</html>

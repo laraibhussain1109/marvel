@@ -13,4 +13,6 @@ urlpatterns = [
     path('login/verify/',   views.verify_otp, name='verify_otp'),
     path('logout', views.logout, name="logout"),
     path('activate/<uidb64>/<token>', views.activate, name="activate"),
+    path('influencer/insights/', views.influencer_insights, name="influencer_insights"),
+    path('influencer/insights/sync/<int:connection_id>/', views.sync_influencer_metrics, name="sync_influencer_metrics"),
 ]
